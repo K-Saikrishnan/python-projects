@@ -10,24 +10,22 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.ref }}'
+  group: "${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}"
   cancel-in-progress: true
 
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: extractions/setup-just@v3
+env:
+  UV_LOCKED: 1
 
+jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: extractions/setup-just@v3
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.7.21"
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: extractions/setup-just@v3
+      - run: uv sync
+      - name: Test
+        run: uv run pytest
