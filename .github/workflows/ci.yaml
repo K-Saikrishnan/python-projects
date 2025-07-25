@@ -15,8 +15,24 @@ concurrency:
 
 env:
   UV_LOCKED: 1
+  UV_NO_PROGRESS: 1
 
 jobs:
+  lint:
+    name: lint - commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "npm"
+          cache-dependency-path: ./package-lock.json
+
+      - run: npm ci
+      - run: just lint_commitlint
+
   test:
     runs-on: ubuntu-latest
     steps:
