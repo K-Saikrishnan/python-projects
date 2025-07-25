@@ -21,11 +21,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: extractions/setup-just@v3
       - uses: astral-sh/setup-uv@v6
         with:
-          version: "0.7.21"
+          version: "0.8.3"
+          enable-cache: true
 
       - run: uv sync
-      - name: Test
-        run: uv run pytest
+      - run: uv run pytest
+
+      - uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

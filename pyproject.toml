@@ -14,7 +14,7 @@ dev = [
   "pre-commit>=4.2.0",
   "pytest>=8.4.1",
   "pytest-cov>=6.2.1",
-  "ruff>=0.12.3",
+  "ruff>=0.12.5",
 ]
 
 [tool.ruff]
@@ -28,3 +28,9 @@ indent-style = "space"
 [tool.ruff.lint]
 select = ['ALL']
 ignore = []
+
+[tool.pytest.ini_options]
+addopts = [
+  "--cov=app",
+  "--cov-report=html",
+]
