@@ -8,3 +8,12 @@ install:
 
 lint_commitlint:
   npx commitlint --last
+
+lint_mypy:
+  uv run mypy .
+
+lint_ruff:
+  uv run ruff check --fix .
+
+lint_pre_commit:
+  uv run pre-commit run --all-files

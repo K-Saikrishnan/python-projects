@@ -11,11 +11,14 @@ repos:
       - id: check-ast
       - id: check-added-large-files
       - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-json
       - id: check-toml
       - id: check-yaml
         args: [--unsafe]
       - id: debug-statements
       - id: end-of-file-fixer
+      - id: fix-byte-order-marker
       - id: mixed-line-ending
       - id: name-tests-test
       - id: requirements-txt-fixer
@@ -35,9 +38,3 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.17.0"
-    hooks:
-      - id: mypy
-        args: [--strict, --ignore-missing-imports]
