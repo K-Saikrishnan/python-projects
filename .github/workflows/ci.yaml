@@ -55,7 +55,6 @@ jobs:
         with:
           node-version: lts/*
           cache: "npm"
-          cache-dependency-path: ./package-lock.json
 
       - run: npm ci --silent
       - run: just lint__commitlint
