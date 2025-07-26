@@ -19,7 +19,32 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
-  lint:
+  lint-mypy:
+    name: lint - mypy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v3
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.3"
+          enable-cache: true
+
+      - run: just lint__mypy
+
+  lint-typos:
+    name: lint - typos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v3
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.3"
+          enable-cache: true
+      - uses: crate-ci/typos@v1.34.0
+
+  lint-commitlint:
     name: lint - commitlint
     runs-on: ubuntu-latest
     steps:
@@ -31,9 +56,8 @@ jobs:
           cache: "npm"
           cache-dependency-path: ./package-lock.json
 
-      - run: npm ci
-
-      - run: just lint_commitlint
+      - run: npm ci --silent
+      - run: just lint__commitlint
 
   test:
     runs-on: ubuntu-latest
@@ -53,10 +77,10 @@ jobs:
       - uses: SonarSource/sonarqube-scan-action@v5
 
   build:
+    needs: [lint-mypy, lint-typos, lint-commitlint, test]
     runs-on: ubuntu-latest
     steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PAT }}

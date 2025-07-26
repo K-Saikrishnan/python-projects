@@ -2,18 +2,21 @@ default:
   @just --list
 
 install:
-  rm -rf .venv
+  cargo install typos-cli
   uv sync
   uv run pre-commit install --install-hooks
 
-lint_commitlint:
+lint__commitlint:
   npx commitlint --last
 
-lint_mypy:
+lint__mypy:
   uv run mypy .
 
-lint_ruff:
+lint__ruff:
   uv run ruff check --fix .
 
-lint_pre_commit:
+lint__pre_commit:
   uv run pre-commit run --all-files
+
+lint__typos:
+  typos --check
