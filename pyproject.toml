@@ -4,15 +4,17 @@ version = "0.1.0"
 description = "Python Projects"
 readme = "README.md"
 requires-python = "==3.13.5"
-dependencies = ["typer==0.16.0"]
+dependencies = [
+  "typer==0.16.0",
+]
 
 [dependency-groups]
 dev = [
-  "mypy==1.17.0",
-  "pre-commit==4.2.0",
+  "mypy==1.17.1",
+  "pre-commit==4.3.0",
   "pytest==8.4.1",
   "pytest-cov==6.2.1",
-  "ruff==0.12.5",
+  "ruff==0.12.8",
 ]
 
 [tool.uv]
