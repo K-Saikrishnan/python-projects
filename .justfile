@@ -20,3 +20,6 @@ lint__pre_commit:
 
 lint__typos:
   typos --check
+
+test:
+  uv run pytest
