@@ -10,24 +10,91 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.ref }}'
+  group: "${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}"
   cancel-in-progress: true
 
+env:
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_HUB_USER }}/${{ github.event.repository.name }}
+  UV_LOCKED: 1
+  UV_NO_PROGRESS: 1
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
 jobs:
-  lint:
+  lint-mypy:
+    name: lint - mypy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: extractions/setup-just@v3
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.3"
+          enable-cache: true
+
+      - run: just lint__mypy
+
+  lint-typos:
+    name: lint - typos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v3
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.3"
+          enable-cache: true
+      - uses: crate-ci/typos@v1.34.0
+
+  lint-commitlint:
+    name: lint - commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "npm"
+
+      - run: npm ci --silent
+      - run: just lint__commitlint
 
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: extractions/setup-just@v3
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.3"
+          enable-cache: true
+
+      - run: uv sync -q
+      - run: uv run pytest
+
+      - uses: SonarSource/sonarqube-scan-action@v5
 
   build:
+    needs: [lint-mypy, lint-typos, lint-commitlint, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: extractions/setup-just@v3
+      - uses: docker/login-action@v3
+        if: ${{ false && github.ref == 'refs/heads/main'}}
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PAT }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ${{env.DOCKER_IMAGE_NAME}}
+
+      - uses: docker/build-push-action@v6
+        with:
+          push: ${{ false && github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

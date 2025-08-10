@@ -1,0 +1,45 @@
+[project]
+name = "python-projects"
+version = "0.1.0"
+description = "Python Projects"
+readme = "README.md"
+requires-python = "==3.13.5"
+dependencies = [
+  "typer==0.16.0",
+]
+
+[dependency-groups]
+dev = [
+  "mypy==1.17.1",
+  "pre-commit==4.3.0",
+  "pytest==8.4.1",
+  "pytest-cov==6.2.1",
+  "ruff==0.12.8",
+]
+
+[tool.uv]
+add-bounds = "exact"
+
+[tool.ruff]
+line-length = 120
+indent-width = 2
+exclude = ["__init__.py", "tests"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+
+[tool.ruff.lint]
+select = ['ALL']
+ignore = [
+  'Q000', # bad-quotes-inline-string
+  'D203', # incorrect-blank-line-before-class
+  'D212', # multi-line-summary-first-line
+]
+
+[tool.mypy]
+strict = true
+exclude = "tests"
+
+[tool.pytest.ini_options]
+addopts = ["--cov=app", "--cov-report=html"]
