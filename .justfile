@@ -2,7 +2,6 @@ default:
   @just --list
 
 install:
-  cargo install typos-cli
   uv sync
   uv run pre-commit install --install-hooks
 
