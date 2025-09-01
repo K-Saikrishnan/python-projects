@@ -45,6 +45,6 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1
+    rev: v1.35.6
     hooks:
       - id: typos
