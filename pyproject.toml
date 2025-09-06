@@ -5,7 +5,7 @@ description = "Python Projects"
 readme = "README.md"
 requires-python = "==3.13.5"
 dependencies = [
-  "typer==0.16.0",
+  "typer==0.16.1",
 ]
 
 [dependency-groups]
