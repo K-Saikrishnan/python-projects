@@ -43,7 +43,7 @@ jobs:
         with:
           version: '0.8.13'
           enable-cache: true
-      - uses: crate-ci/typos@a4c3e43aea0a9e9b9e6578d2731ebd9a27e8f6cd # v1.35.5
+      - uses: crate-ci/typos@02fc4a1c87a21f493a7c4cc57897917672db8437 # v1.35.8
 
   lint-commitlint:
     name: lint - commitlint
