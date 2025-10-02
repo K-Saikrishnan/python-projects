@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}'
+  group: "${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}"
   cancel-in-progress: true
 
 env:
@@ -28,7 +28,7 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@b75a909f75acd358c2196fb9a5f1299a9a8868a4 # v6
         with:
-          version: '0.8.17'
+          version: "0.8.17"
           enable-cache: true
 
       - run: just lint__mypy
@@ -41,7 +41,7 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@b75a909f75acd358c2196fb9a5f1299a9a8868a4 # v6
         with:
-          version: '0.8.17'
+          version: "0.8.17"
           enable-cache: true
       - uses: crate-ci/typos@85f62a8a84f939ae994ab3763f01a0296d61a7ee # v1.36.2
 
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: lts/*
-          cache: 'npm'
+          cache: "npm"
 
       - run: npm ci --silent
       - run: just lint__commitlint
@@ -68,13 +68,13 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@b75a909f75acd358c2196fb9a5f1299a9a8868a4 # v6
         with:
-          version: '0.8.17'
+          version: "0.8.17"
           enable-cache: true
 
       - run: uv sync -q
       - run: uv run pytest
 
-      - uses: SonarSource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703 # v5
+      - uses: SonarSource/sonarqube-scan-action@v6
 
   build:
     needs: [lint-mypy, lint-typos, lint-commitlint, test]
