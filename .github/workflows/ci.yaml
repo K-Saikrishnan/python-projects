@@ -20,7 +20,7 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
-  lint-mypy:
+  lint_mypy:
     name: lint - mypy
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +33,7 @@ jobs:
 
       - run: just lint__mypy
 
-  lint-typos:
+  lint_typos:
     name: lint - typos
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +45,7 @@ jobs:
           enable-cache: true
       - uses: crate-ci/typos@85f62a8a84f939ae994ab3763f01a0296d61a7ee # v1.36.2
 
-  lint-commitlint:
+  lint_commitlint:
     name: lint - commitlint
     runs-on: ubuntu-latest
     steps:
@@ -77,7 +77,7 @@ jobs:
       - uses: SonarSource/sonarqube-scan-action@v6
 
   build:
-    needs: [lint-mypy, lint-typos, lint-commitlint, test]
+    needs: [lint_mypy, lint_typos, lint_commitlint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3
