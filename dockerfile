@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.8.23-python3.13-alpine@sha256:2dc9ecbbd685112c97d8d7a67b81c5afab84acf2d81e4b9b6b6c002cc79ee270
+FROM ghcr.io/astral-sh/uv:0.9.2-python3.13-alpine@sha256:e41e1e3bfa549df25a9786a0f5ee64b021500d61e3cda41f251c60ebde1e3a90
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LOCKED=1
