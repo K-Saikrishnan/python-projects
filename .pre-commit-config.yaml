@@ -8,6 +8,8 @@ ci:
   autofix_commit_msg: "ci(pre-commit): auto fixes"
   autoupdate_commit_msg: "build(deps): update pre-commit hooks"
   autoupdate_schedule: weekly
+  # Skip due to lack of network access
+  skip: [uv-lock, uv-sync]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
