@@ -20,16 +20,27 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
+  lint_pre_commit:
+    name: lint - pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.2"
+
+      - run: just lint__pre_commit
+
   lint_mypy:
     name: lint - mypy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
-      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          version: "0.8.19"
-          enable-cache: true
+          version: "0.9.2"
 
       - run: just lint__mypy
 
@@ -39,10 +50,9 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
-      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          version: "0.8.19"
-          enable-cache: true
+          version: "0.9.2"
       - uses: crate-ci/typos@85f62a8a84f939ae994ab3763f01a0296d61a7ee # v1.36.2
 
   lint_commitlint:
@@ -66,10 +76,9 @@ jobs:
         with:
           fetch-depth: 0
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
-      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          version: "0.8.19"
-          enable-cache: true
+          version: "0.9.2"
 
       - run: uv sync -q
       - run: uv run pytest
