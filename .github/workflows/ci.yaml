@@ -42,7 +42,7 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7
         with:
-          version: "0.9.9"
+          version: "0.9.11"
 
       - run: just lint__mypy
 
@@ -54,7 +54,7 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7
         with:
-          version: "0.9.9"
+          version: "0.9.11"
       - uses: crate-ci/typos@626c4bedb751ce0b7f03262ca97ddda9a076ae1c # v1.39.2
 
   test:
@@ -66,7 +66,7 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7
         with:
-          version: "0.9.9"
+          version: "0.9.11"
 
       - run: uv sync -q
       - run: uv run pytest
