@@ -62,7 +62,9 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
         with:
-          version: '0.10.4'
+          cache-python: true
+          enable-cache: true
+          prune-cache: false
 
       - run: just lint__ty
 
@@ -75,7 +77,9 @@ jobs:
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
         with:
-          version: '0.10.4'
+          cache-python: true
+          enable-cache: true
+          prune-cache: false
 
       - run: just test
 
