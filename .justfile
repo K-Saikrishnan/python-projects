@@ -27,3 +27,7 @@ lint__prek:
 
 lint__typos:
   typos --check
+
+
+test:
+  uv run pytest
