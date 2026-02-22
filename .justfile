@@ -6,6 +6,11 @@ install:
   uv run pre-commit install --install-hooks
 
 
+[group('ci')]
+install__ci:
+  uv sync -q
+
+
 lint__commitlint_last:
   npx commitlint --last --verbose
 
