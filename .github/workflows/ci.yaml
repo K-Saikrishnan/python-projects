@@ -10,11 +10,12 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}"
+  group: '${{ github.workflow }}-${{ github.ref }}'
   cancel-in-progress: true
 
 env:
   DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_HUB_USER }}/${{ github.event.repository.name }}
+  PREK_SKIP: 'uv-lock,uv-sync'
   UV_LOCKED: 1
   UV_NO_PROGRESS: 1
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -24,73 +25,87 @@ jobs:
     name: lint - commitlint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: lts/*
-          cache: "npm"
+          cache: 'npm'
 
-      - run: npm ci --silent
-      - run: just lint__commitlint
+      - run: npm ci --ignore-scripts --silent
 
-  lint_mypy:
-    name: lint - mypy
+      - name: lint - commitlint (commit)
+        run: just lint__commitlint_last
+
+      - name: lint - commitlint (pr)
+        if: github.event_name == 'pull_request'
+        run: just lint__commitlint_pr ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+
+  lint_prek:
+    name: lint - prek
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@v6
+
+      - uses: j178/prek-action@v1
+        with:
+          extra-args: '--all-files'
+
+  lint_ty:
+    name: lint - ty
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
         with:
-          version: "0.9.11"
+          version: '0.10.4'
 
-      - run: just lint__mypy
+      - run: just lint__ty
 
-  lint_typos:
-    name: lint - typos
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
-      - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
-      - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
-        with:
-          version: "0.9.11"
-      - uses: crate-ci/typos@626c4bedb751ce0b7f03262ca97ddda9a076ae1c # v1.39.2
+  # lint_typos:
+  #   name: lint - typos
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: crate-ci/typos@v1.43.5
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
       - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7
         with:
-          version: "0.9.11"
+          version: '0.10.4'
 
       - run: uv sync -q
       - run: uv run pytest
 
-      - uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6
+      - uses: SonarSource/sonarqube-scan-action@v7.0.0
 
   build:
-    needs: [lint_mypy, lint_typos, lint_commitlint, test]
+    needs: [lint_prek, lint_ty, lint_commitlint, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3
+      - uses: docker/login-action@v3.7.0
         if: ${{ false && github.ref == 'refs/heads/main'}}
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PAT }}
 
-      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
+      - uses: docker/setup-buildx-action@v3.12.0
 
-      - uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+      - uses: docker/metadata-action@v5.10.0
         id: meta
         with:
           images: ${{env.DOCKER_IMAGE_NAME}}
 
-      - uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6
+      - uses: docker/build-push-action@v6.19.2
         with:
           push: ${{ false && github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
