@@ -3,7 +3,7 @@ default:
 
 install:
   uv sync
-  uv run pre-commit install --install-hooks
+  uv run prek install --install-hooks
 
 
 [group('ci')]
