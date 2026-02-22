@@ -5,17 +5,34 @@ install:
   uv sync
   uv run pre-commit install --install-hooks
 
-lint__commitlint:
-  npx commitlint --last
 
-lint__mypy:
-  uv run mypy .
+[group('ci')]
+install__ci:
+  uv sync -q
+
+
+lint__commitlint_last:
+  npx commitlint --last --verbose
+
+lint__commitlint_pr from to:
+  npx commitlint --from {{from}} --to {{to}} --verbose
+
+
+lint__ty:
+  uv run ty check
+
 
 lint__ruff:
-  uv run ruff check --fix .
+  uv run ruff check --fix
 
-lint__pre_commit:
-  uv run pre-commit run --all-files
+
+lint__prek:
+  uv run prek run --all-files
+
 
 lint__typos:
   typos --check
+
+
+test:
+  uv run pytest
