@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.10.4-alpine3.23@sha256:40b4b624e6f8e674a038507efbbaa97f7535536808e75c8e3161602dc2ac8024
+FROM ghcr.io/astral-sh/uv:0.10.4-alpine3.23@sha256:40b4b624e6f8e674a038507efbbaa97f7535536808e75c8e3161602dc2ac8024 AS build
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LOCKED=1
@@ -14,15 +14,16 @@ RUN --mount=type=cache,target=/root/.cache/uv \
   --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
   uv sync -q --no-dev --no-install-project
 
-COPY LICENSE ./
+COPY LICENSE README.md ./
 COPY pyproject.toml .python-version uv.lock ./
-COPY app/ ./
+COPY src/ ./src/
 
 RUN --mount=type=cache,target=/root/.cache/uv \
   uv sync -q --no-dev
 
-ENV PATH="/app/.venv/bin:$PATH"
 
-ENTRYPOINT []
+FROM alpine:3.23@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS runtime
 
-CMD ["python", "main.py"]
+COPY --from=build /app/.venv/bin/python-projects /usr/local/bin/python-projects
+
+CMD ["/bin/sh"]
