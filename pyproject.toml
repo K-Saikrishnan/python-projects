@@ -3,6 +3,9 @@ name = "python-projects"
 version = "0.1.0"
 description = "Python Projects"
 readme = "README.md"
+authors = [
+  { name = "K-Saikrishnan", email = "53394202+K-Saikrishnan@users.noreply.github.com" },
+]
 requires-python = "==3.14.3"
 dependencies = ["typer==0.24.1"]
 
@@ -11,13 +14,22 @@ dev = [
   "prek==0.3.3",
   "pytest==9.0.2",
   "pytest-cov==7.0.0",
+  "pytest-mock==3.15.1",
   "ruff==0.15.2",
   "ty==0.0.18",
 ]
 
+[project.scripts]
+python-projects = "python_projects.main:app"
+
+[build-system]
+requires = ["uv_build>=0.10.7,<0.11.0"]
+build-backend = "uv_build"
+
 [tool.uv]
 add-bounds = "exact"
 required-version = ">=0.10"
+
 
 [tool.ruff]
 line-length = 120
@@ -43,14 +55,14 @@ ignore = [
   "Q",      # flake8-quotes
   "W191",   # tab-indentation
 
-  # "D100", # undocumented-public-module
-  # "D101", # undocumented-public-class
-  # "D102", # undocumented-public-method
-  # "D103", # undocumented-public-function
+  "D100", # undocumented-public-module
+  "D101", # undocumented-public-class
+  "D102", # undocumented-public-method
+  "D103", # undocumented-public-function
   "D104", # undocumented-public-package
-  # "D105", # undocumented-magic-method
-  # "D106", # undocumented-public-nested-class
-  # "D107", # undocumented-public-init
+  "D105", # undocumented-magic-method
+  "D106", # undocumented-public-nested-class
+  "D107", # undocumented-public-init
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -69,10 +81,16 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
 
+
 [tool.pytest.ini_options]
 addopts = [
-  "--cov=app --cov-report=html --cov-report=xml --cov-report=term-missing --cov-fail-under=0",
+  "--cov=python_projects",
+  "--cov-report=html",
+  "--cov-report=xml",
+  "--cov-report=term-missing",
+  "--cov-fail-under=0",
 ]
+
 pythonpath = "."
 xfail_strict = true
 

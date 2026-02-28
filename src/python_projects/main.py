@@ -1,10 +1,12 @@
-"""Entrypoint."""
-
 import logging
+
+import typer
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+app = typer.Typer()
 
-if __name__ == '__main__':
-  logger.info('Hello, World!')
+
+@app.command()
+def main() -> None: ...

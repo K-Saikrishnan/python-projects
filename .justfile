@@ -36,3 +36,11 @@ lint__typos:
 
 test:
   uv run pytest
+
+
+build:
+  uv build
+
+
+docs:
+  uv run typer python_projects.main utils docs --output docs.md --name python-projects
