@@ -7,7 +7,7 @@ authors = [
   { name = "K-Saikrishnan", email = "53394202+K-Saikrishnan@users.noreply.github.com" },
 ]
 requires-python = "==3.14.3"
-dependencies = ["typer==0.25.0"]
+dependencies = ["typer==0.25.1"]
 
 [dependency-groups]
 dev = [
