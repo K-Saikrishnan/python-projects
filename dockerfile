@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.11.32-alpine3.23-dhi@sha256:b3d617e3af214757c031a2a3b64b6a6dd9a7c22ff96212fdf76e81972c8a7320
+FROM ghcr.io/astral-sh/uv@sha256:b3d617e3af214757c031a2a3b64b6a6dd9a7c22ff96212fdf76e81972c8a7320
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV UV_COMPILE_BYTECODE=1
