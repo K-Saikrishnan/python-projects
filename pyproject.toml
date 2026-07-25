@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
   { name = "K-Saikrishnan", email = "53394202+K-Saikrishnan@users.noreply.github.com" },
 ]
-requires-python = "==3.14.3"
+requires-python = "==3.14.6"
 dependencies = ["typer==0.26.8"]
 
 [dependency-groups]
