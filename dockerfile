@@ -1,5 +1,4 @@
-FROM dhi.io/alpine-base@sha256:342fb1c1d0542cc1b4d458596a2ef037b883d9a7d290c173d5949c6ac28b083d
-COPY --from=ghcr.io/astral-sh/uv@sha256:df4cae8f3a96d175e2e5f992e597550000edbe78fdc2594d5cd8de1a217f504c /uv /uvx /bin/
+FROM ghcr.io/astral-sh/uv:0.11.32-alpine3.23-dhi
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV UV_COMPILE_BYTECODE=1
