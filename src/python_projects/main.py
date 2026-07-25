@@ -9,4 +9,5 @@ app = typer.Typer()
 
 
 @app.command()
-def main() -> None: ...
+def main() -> str:
+  return 'Hello, World!'
